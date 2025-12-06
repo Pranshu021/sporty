@@ -1,0 +1,8 @@
+openai-agents
+pytz
+requests
+python-dotenv
+playwright
+beautifulsoup4
+lxml
+pydantic
