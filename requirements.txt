@@ -6,3 +6,5 @@ playwright
 beautifulsoup4
 lxml
 pydantic
+nest_asyncio
+dateparser
