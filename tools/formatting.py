@@ -41,7 +41,7 @@ def schedule_message_formatter(matches: List[FootballMatchSchema]) -> str:
                 formatted_messages.append(f"🏆 <b>{league}</b>\n")
                 for match in league_matches:
                     formatted_messages.append(
-                        f"⚽ {clean_html(match.team_1)} vs {clean_html(match.team_2)} at 🏟️ {clean_html(match.venue)} ⏰ {clean_html(match.time)} \n"
+                        f"⚽ <b>{clean_html(match.team_1)}</b> vs <b>{clean_html(match.team_2)}</b> at 🏟️ {clean_html(match.venue)} ⏰ {clean_html(match.time)} \n"
                     )
 
         final_message = "\n".join(formatted_messages)
