@@ -27,7 +27,7 @@ async def fetch_rendered_html(url: str, type_of_data: str) -> str:
         # Fetching the first table of the page which will be for the date mentioned in the URL params/path
         day_of_match = soup.select_one("div.Table__Title")
         # If today's date not found on the page, return no matches or results
-        if dateparser.parse(day_of_match.text) is None:
+        if day_of_match is None or dateparser.parse(day_of_match.text) is None:
             return "<div>No table found</div>"
         # Using dateparser to convert the day of the match to a standard date object. No errors or edge-cases in comparing dates now. Better than comparing strings.
         parsed_day_of_match = dateparser.parse(day_of_match.text).date()
