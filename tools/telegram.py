@@ -2,7 +2,6 @@ import os
 import logging
 import requests
 from bs4 import BeautifulSoup
-from agents import function_tool
 
 
 def sanitize_message(message: str) -> str:
@@ -38,7 +37,6 @@ def sanitize_message(message: str) -> str:
 
 
 # Tool to send Telegram messages
-@function_tool
 def send_telegram_message(message: str):
     """
     Tool: Sends a message to a Telegram group using a bot.

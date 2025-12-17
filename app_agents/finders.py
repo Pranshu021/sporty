@@ -8,8 +8,8 @@ from prompts.system_prompts import (
 )
 from tools.utils import get_current_date, get_previous_date, logging_tool
 from tools.scraping import scrape_data
-from tools.formatting import schedule_message_formatter, results_message_formatter
-from tools.telegram import send_telegram_message
+from tools.formatting import results_message_formatter, broadcast_schedule_message
+# from tools.telegram import send_telegram_message
 
 # Agent to find match schedules
 match_schedule_finder = Agent[UserContext](
@@ -20,8 +20,7 @@ match_schedule_finder = Agent[UserContext](
         logging_tool,
         get_current_date,
         scrape_data,
-        schedule_message_formatter,
-        send_telegram_message,
+        broadcast_schedule_message,
     ],
     output_type=List[FootballMatchSchema],
 )
@@ -36,7 +35,6 @@ match_results_finder = Agent[UserContext](
         get_previous_date,
         scrape_data,
         results_message_formatter,
-        send_telegram_message,
     ],
     output_type=str,
 )

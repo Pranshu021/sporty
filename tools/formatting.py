@@ -2,8 +2,7 @@ import logging
 from typing import List
 from agents import function_tool
 from models.schemas import FootballMatchSchema, FootballMatchResultSchema
-
-
+from tools.telegram import send_telegram_message
 from bs4 import BeautifulSoup
 
 
@@ -13,18 +12,11 @@ def clean_html(text: str) -> str:
     return BeautifulSoup(text, "html.parser").get_text()
 
 
-# Message formatter tool for a consistent output message on telegram for Match schedules
-# HTML Formatted
-@function_tool
-def schedule_message_formatter(matches: List[FootballMatchSchema]) -> str:
-    """
-    Tool: Formats match schedules into a visually appealing message.
-    """
+# Helper function to format the message in a specific way. Might change it later tbh
+def _format_schedule_message(matches: List[FootballMatchSchema]) -> str:
     try:
         formatted_messages = []
-        logging.info(
-            f"Executing schedule_message_formatter tool for {len(matches)} matches."
-        )
+        logging.info(f"Formatting schedule message for {len(matches)} matches.")
         formatted_messages.append("<b>📆 Today's Football Fixtures</b>\n\n")
 
         matches_by_league = {}
@@ -33,8 +25,6 @@ def schedule_message_formatter(matches: List[FootballMatchSchema]) -> str:
             if league not in matches_by_league:
                 matches_by_league[league] = []
             matches_by_league[league].append(match)
-
-        formatted_messages = ["<b>📆 Today's Football Fixtures</b>\n\n"]
 
         for league, league_matches in matches_by_league.items():
             if league_matches:
@@ -45,11 +35,23 @@ def schedule_message_formatter(matches: List[FootballMatchSchema]) -> str:
                     )
 
         final_message = "\n".join(formatted_messages)
-        # logging.info(f"Formatted message:\n{final_message}")
         return final_message
     except Exception as e:
         logging.error(f"Formatter error: {e}")
         return "Error formatting message."
+
+
+# Function tool to format the message and send the message to telegram
+@function_tool
+def broadcast_schedule_message(matches: List[FootballMatchSchema]) -> str:
+    """
+    Tool: Formats match schedules and sends them to Telegram.
+    """
+    formatted_message = _format_schedule_message(matches)
+    if formatted_message == "Error formatting message.":
+        return "Failed to format message."
+
+    return send_telegram_message(formatted_message)
 
 
 # Message formatter tool for a consistent output message on telegram for Match Results
