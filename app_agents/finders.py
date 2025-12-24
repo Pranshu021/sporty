@@ -5,10 +5,16 @@ from models.schemas import FootballMatchSchema
 from prompts.system_prompts import (
     MATCH_SCHEDULE_FINDER_INSTRUCTIONS,
     MATCH_RESULTS_FINDER_INSTRUCTIONS,
+    FOOTBALL_NEWS_AGENT_INSTRUCTIONS,
 )
 from tools.utils import get_current_date, get_previous_date, logging_tool
 from tools.scraping import scrape_data
-from tools.formatting import results_message_formatter, broadcast_schedule_message
+from tools.formatting import (
+    results_message_formatter,
+    broadcast_schedule_message,
+    broadcast_news_message,
+)
+from agents import WebSearchTool
 # from tools.telegram import send_telegram_message
 
 # Agent to find match schedules
@@ -35,6 +41,19 @@ match_results_finder = Agent[UserContext](
         get_previous_date,
         scrape_data,
         results_message_formatter,
+    ],
+    output_type=str,
+)
+
+football_news_agent = Agent[UserContext](
+    name="football_news_agent",
+    instructions=FOOTBALL_NEWS_AGENT_INSTRUCTIONS,
+    model="gpt-4o-mini",
+    tools=[
+        logging_tool,
+        get_current_date,
+        WebSearchTool(),
+        broadcast_news_message,
     ],
     output_type=str,
 )

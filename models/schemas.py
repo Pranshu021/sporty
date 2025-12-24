@@ -16,3 +16,9 @@ class FootballMatchResultSchema(BaseModel):
     home_team: str
     away_team: str
     score: str
+
+
+class FootballNewsSchema(BaseModel):
+    headline: str
+    source: str
+    article_url: str

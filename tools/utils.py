@@ -20,12 +20,14 @@ def get_current_time() -> str:
 
 # Get current date. Used by Scheduling agent to get the current date.
 @function_tool
-def get_current_date() -> str:
+def get_current_date(agent_type: str = "espn") -> str:
     """
     Tool: Gets the current date.
     """
-    logging.info("Executing get_current_time tool...")
+    logging.info("Executing get_current_date tool...")
     today = str(date.today())
+    if agent_type == "news_agent":
+        return today
     # Formatting for ESPN URL.
     formatted_date = str(today).replace("-", "")
     return formatted_date

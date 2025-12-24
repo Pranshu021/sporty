@@ -1,7 +1,11 @@
 from agents import Agent
 from models.context import UserContext
 from tools.utils import get_current_time
-from app_agents.finders import match_schedule_finder, match_results_finder
+from app_agents.finders import (
+    match_schedule_finder,
+    match_results_finder,
+    football_news_agent,
+)
 from prompts.system_prompts import MANAGER_AGENT_INSTRUCTIONS
 
 # Main agent to manage the workflow. Triggers the Manager Agent which then handles the handovers.
@@ -11,5 +15,5 @@ manager_agent = Agent[UserContext](
     instructions=MANAGER_AGENT_INSTRUCTIONS,
     model="gpt-4o-mini",
     tools=[get_current_time],
-    handoffs=[match_schedule_finder, match_results_finder],
+    handoffs=[match_schedule_finder, match_results_finder, football_news_agent],
 )

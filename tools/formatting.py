@@ -1,7 +1,11 @@
 import logging
 from typing import List
 from agents import function_tool
-from models.schemas import FootballMatchSchema, FootballMatchResultSchema
+from models.schemas import (
+    FootballMatchSchema,
+    FootballMatchResultSchema,
+    FootballNewsSchema,
+)
 from tools.telegram import send_telegram_message
 from bs4 import BeautifulSoup
 
@@ -41,6 +45,24 @@ def _format_schedule_message(matches: List[FootballMatchSchema]) -> str:
         return "Error formatting message."
 
 
+# Helper function to format the message in a specific way. Might change it later tbh
+def _format_news_message(news: List[FootballNewsSchema]) -> str:
+    """
+    Tool: Formats news into a visually appealing message.
+    """
+    logging.info(f"Executing format_news tool for {len(news)} news.")
+    formatted_messages = []
+    formatted_messages.append("<b>⚽ Today's Football News</b>\n\n")
+
+    for news_item in news:
+        formatted_messages.append(f"\n<b> 📰 {clean_html(news_item.headline)}</b>\n")
+        formatted_messages.append(f" 🔗 {clean_html(news_item.article_url)}\n\n")
+
+    final_message = "\n".join(formatted_messages)
+    logging.info(f"Formatted message:\n{final_message}")
+    return final_message
+
+
 # Function tool to format the message and send the message to telegram
 @function_tool
 def broadcast_schedule_message(matches: List[FootballMatchSchema]) -> str:
@@ -48,6 +70,19 @@ def broadcast_schedule_message(matches: List[FootballMatchSchema]) -> str:
     Tool: Formats match schedules and sends them to Telegram.
     """
     formatted_message = _format_schedule_message(matches)
+    if formatted_message == "Error formatting message.":
+        return "Failed to format message."
+
+    return send_telegram_message(formatted_message)
+
+
+@function_tool
+def broadcast_news_message(news: List[FootballNewsSchema]) -> str:
+    """
+    Tool: Formats today's football news and sends them to Telegram.
+    """
+    formatted_message = _format_news_message(news)
+    logging.info(f"Formatted news: {formatted_message}")
     if formatted_message == "Error formatting message.":
         return "Failed to format message."
 
