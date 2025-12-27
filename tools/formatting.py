@@ -52,10 +52,11 @@ def _format_news_message(news: List[FootballNewsSchema]) -> str:
     """
     logging.info(f"Executing format_news tool for {len(news)} news.")
     formatted_messages = []
-    formatted_messages.append("<b>⚽ Today's Football News</b>\n\n")
+    formatted_messages.append("<b>⚽ Today's Football News</b>")
+    formatted_messages.append("\n")
 
     for news_item in news:
-        formatted_messages.append(f"\n<b> 📰 {clean_html(news_item.headline)}</b>\n")
+        formatted_messages.append(f"<b> 📰 {clean_html(news_item.headline)}</b>\n")
         formatted_messages.append(f" 🔗 {clean_html(news_item.article_url)}\n\n")
 
     final_message = "\n".join(formatted_messages)
